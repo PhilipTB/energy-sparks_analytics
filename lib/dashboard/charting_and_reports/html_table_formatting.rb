@@ -9,8 +9,18 @@ class HtmlTableFormatting
     @precision = precision
   end
 
-  def html(right_justified_columns: [1..1000], widths: nil)
+  def html(right_justified_columns: [1..1000], widths: nil, scrollable: false)
     template = %{
+      <% if scrollable %>
+        <style>
+          .table_wrapper{
+              display: block;
+              overflow-x: auto;
+              white-space: nowrap;
+          }
+        </style>
+        <div class="table_wrapper">
+      <% end %>
       <table class="table table-striped table-sm">
         <% unless @header.nil? %>
           <thead>
@@ -38,6 +48,9 @@ class HtmlTableFormatting
           </tr>
         <% end %>
       </table>
+      <% if scrollable %>
+        </div>
+      <% end %>
     }.gsub(/^  /, '')
 
     generate_html(template, binding)
